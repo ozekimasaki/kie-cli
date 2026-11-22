@@ -1,6 +1,6 @@
 ---
 name: kie-cli
-description: Generate and edit images, videos, and music, and chat with LLMs through kie.ai using the kie CLI (@ozekimasaki/kie-cli). Use when the user asks to 画像生成/動画生成/音楽生成/Suno/Veo/Nano Banana/Seedance/画像編集/リファレンスから生成/クレジット確認/モデル一覧 or to run, call, list or debug kie commands; failed tasks can be resumed with kie status.
+description: Generate and edit images, videos, and music, and chat with LLMs through kie.ai using the kie CLI (@maigo999/kie-cli). Use when the user asks to 画像生成/動画生成/音楽生成/Suno/Veo/Nano Banana/Seedance/画像編集/リファレンスから生成/クレジット確認/モデル一覧 or to run, call, list or debug kie commands; failed tasks can be resumed with kie status.
 ---
 
 # kie-cli
@@ -13,7 +13,7 @@ Drive the kie.ai API (200+ image/video/music/chat models, one credit balance) th
 
 Try in order; use the first that works:
 
-1. `kie` if it is on PATH (`npm install -g @ozekimasaki/kie-cli` or `bun add -g @ozekimasaki/kie-cli`).
+1. `kie` if it is on PATH (`npm install -g @maigo999/kie-cli` or `bun add -g @maigo999/kie-cli`).
 2. From a checkout of https://github.com/ozekimasaki/kie-cli , Bun with no build step: `bun <repo>/src/index.ts <command> ...`
 3. Same checkout, Node on the build output: `node <repo>/dist/index.js <command> ...` (build first: `npm install && npm run build`).
 

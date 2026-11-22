@@ -1,5 +1,8 @@
 {
-  "name": "@ozekimasaki/kie-cli",
+  "name": "@maigo999/kie-cli",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.1.0",
   "description": "CLI for kie.ai: model catalog, credits, image/video/music generation, LLM chat",
   "keywords": [

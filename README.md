@@ -1,4 +1,4 @@
-# @ozekimasaki/kie-cli
+# @maigo999/kie-cli
 
 CLI for [kie.ai](https://kie.ai) — one API key for image, video, music and chat models.
 Zero runtime dependencies (Node 18+/Bun, built on the official KIE APIs). Ships a
@@ -7,7 +7,7 @@ Qoder/Claude-style agent skill in [`skills/kie-cli/`](skills/kie-cli/SKILL.md).
 ## Install
 
 ```bash
-npm install -g @ozekimasaki/kie-cli   # or: bun add -g @ozekimasaki/kie-cli
+npm install -g @maigo999/kie-cli   # or: bun add -g @maigo999/kie-cli
 ```
 
 ## Setup from source
