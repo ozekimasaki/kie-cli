@@ -55,6 +55,7 @@ Always pass `--out <path>` (or `--auto-out`) when the user wants a saved file â€
 - Video also accepts `--last-frame`, `--ref-image/--ref-video/--ref-audio`, `--audio|--no-audio`, `--resolution`.
 - Timeouts: 10 min image, 30 min video/music; override with `--timeout <seconds>`. On timeout the task keeps running server-side â€” re-read the taskId from stderr and finish with `kie status <taskId> --wait`.
 - `--json` on models/balance/status/chat for machine-readable output.
+- No pixel `size` parameter exists for nano-banana models: `--aspect` must be one of the enum `1:1|9:16|16:9|3:4|4:3`, and unknown `--input` keys are silently ignored by the API (output falls back to 1:1). For custom ratios (e.g. business card 91:55), generate at the nearest enum value and crop locally.
 
 ## Workflow hints
 
