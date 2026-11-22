@@ -1,13 +1,23 @@
 # @maigo999/kie-cli
 
-CLI for [kie.ai](https://kie.ai) — one API key for image, video, music and chat models.
-Zero runtime dependencies (Node 18+/Bun, built on the official KIE APIs). Ships a
-Qoder/Claude-style agent skill in [`skills/kie-cli/`](skills/kie-cli/SKILL.md).
+[![npm](https://img.shields.io/npm/v/@maigo999/kie-cli)](https://www.npmjs.com/package/@maigo999/kie-cli)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-## Install
+CLI for [kie.ai](https://kie.ai) — one API key for 200+ image, video, music and chat models
+(Nano Banana, Veo, Seedance, Suno, GPT, Claude, ...). Zero runtime dependencies, runs on
+Node 18+ and Bun, and ships an [Agent Skills](https://agentskills.io/specification) skill
+for coding agents ([skills.sh page](https://www.skills.sh/ozekimasaki/kie-cli/kie-cli)).
+
+## Install & quickstart
 
 ```bash
 npm install -g @maigo999/kie-cli   # or: bun add -g @maigo999/kie-cli
+
+kie config set-key                 # paste your key from https://kie.ai/api-key (hidden prompt)
+kie balance                        # verify credits
+kie image gen "a white ceramic mug, product photo" --aspect 1:1 --out mug.png
+kie video gen @story.md --aspect 16:9 --auto-out
+kie music gen "relaxing lo-fi piano" --instrumental --out song.mp3
 ```
 
 ## Setup from source
@@ -57,10 +67,21 @@ kie status <taskId> [--wait] [--out file]        # query / resume a task
 kie upload ./local.png                           # local file -> hosted URL (auto-used by --image/--ref)
 ```
 
+## Prompts from files & reference images
+
+Any prompt accepts the `@file` prefix (markdown/text is sent verbatim), and `--image/--ref`
+accept local files or URLs — local files are uploaded automatically (upload links live 24 h):
+
+```bash
+kie image gen @prompt.md                        # prompt from a markdown file
+kie image ref "same character reading a book" --ref chara.png --ref style.png --out scene.png
+kie image edit "make it sunset" --image photo.jpg --out edited.png
+kie chat --model gpt-5.2 @question.txt --system @persona.md
+kie run <model> --input @params.json            # raw JSON parameters from a file too
+```
+
 ## Notes
 
-- Prompts can come from a file: prefix with `@` (e.g. `kie image gen @prompt.md`, `kie chat --model X @question.txt`, `--system @persona.md`, `--input @params.json`). The file content is used verbatim (markdown included).
-- Local files passed to `--image/--ref/--lyrics` are uploaded via the KIE File Upload API first (uploaded files expire in 24 h).
 - Generation is async: the CLI polls `recordInfo` until `success`/`fail` (defaults: 10 min image, 30 min video/music; override with `--timeout <seconds>`). Without `--out`, result URLs are printed instead of downloading.
 - Chat uses the OpenAI-compatible endpoint `https://api.kie.ai/openai/v1/chat/completions`; list models with `kie chat models [--protocol anthropic]`.
 - Default models: `google/nano-banana` (gen), `nano-banana-2-1` (ref), `google/nano-banana-edit` (edit), `bytedance/seedance-2-5` (video), `ai-music-api/generate` + Suno `V6` (music). Override with `--model` / `--input` JSON.
@@ -75,3 +96,10 @@ npx skills add ozekimasaki/kie-cli                 # skills.sh CLI (Claude Code,
 gh skill install ozekimasaki/kie-cli kie-cli       # GitHub CLI (Copilot, Qoder, ...); --scope user to install globally
 cp -r skills/kie-cli ~/.qoder/skills/              # Qoder, manually
 ```
+
+## Links
+
+- API docs: https://docs.kie.ai
+- npm: https://www.npmjs.com/package/@maigo999/kie-cli
+- Skill listing: https://www.skills.sh/ozekimasaki/kie-cli/kie-cli
+- Keys & billing: https://kie.ai/api-key
