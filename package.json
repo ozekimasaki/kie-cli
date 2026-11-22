@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI for kie.ai: model catalog, credits, image/video/music generation, LLM chat",
   "keywords": [
     "kie",

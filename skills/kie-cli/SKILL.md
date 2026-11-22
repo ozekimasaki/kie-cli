@@ -6,7 +6,7 @@ compatibility: Requires the kie CLI (npm/bun install -g @maigo999/kie-cli, or a 
 metadata:
   author: Masaki Ozeki
   homepage: https://github.com/ozekimasaki/kie-cli
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # kie-cli
