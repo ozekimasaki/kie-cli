@@ -1,5 +1,5 @@
 import { createTask, defaultOutPath, finishTask, resolveInput } from '../task.js';
-import { flag, flagList, hasFlag, parseTimeoutSeconds, readJsonFlag, readTextFlag, type ParsedArgs } from '../cli.js';
+import { flag, flagList, hasFlag, parseTimeoutSeconds, promptFrom, readJsonFlag, readTextFlag, type ParsedArgs } from '../cli.js';
 
 export async function imageCommand(sub: string | undefined, args: ParsedArgs): Promise<void> {
   switch (sub) {
@@ -16,7 +16,7 @@ export async function imageCommand(sub: string | undefined, args: ParsedArgs): P
 
 async function imageGen({ positional, flags, repeats }: ParsedArgs, withRefs: boolean): Promise<void> {
   const refs = [...flagList(repeats, flags, 'ref'), ...flagList(repeats, flags, 'image')];
-  const prompt = positional.join(' ') || flag(flags, 'prompt');
+  const prompt = promptFrom(positional, flags);
   if (!prompt) throw new Error('Usage: kie image gen "prompt" [--ref image-or-url ...]');
 
   const usingBuiltinRefModel = refs.length > 0 && !flag(flags, 'model');
@@ -38,7 +38,7 @@ async function imageGen({ positional, flags, repeats }: ParsedArgs, withRefs: bo
 async function imageEdit({ positional, flags, repeats }: ParsedArgs): Promise<void> {
   const images = flagList(repeats, flags, 'image');
   if (images.length === 0) throw new Error('Usage: kie image edit "prompt" --image <file|url> [--image ...]');
-  const prompt = positional.join(' ') || flag(flags, 'prompt');
+  const prompt = promptFrom(positional, flags);
   if (!prompt) throw new Error('kie image edit requires a prompt (positional or --prompt)');
 
   const model = flag(flags, 'model') ?? 'google/nano-banana-edit';
@@ -58,7 +58,7 @@ async function submit(model: string, input: Record<string, unknown>, flags: Reco
 export async function videoCommand(sub: string | undefined, args: ParsedArgs): Promise<void> {
   if (sub !== 'gen') throw new Error('Usage: kie video gen "prompt" [options] (run "kie help video")');
   const { positional, flags, repeats } = args;
-  const prompt = positional.join(' ') || flag(flags, 'prompt');
+  const prompt = promptFrom(positional, flags);
   if (!prompt && !flag(flags, 'image')) throw new Error('Usage: kie video gen "prompt" [--image first-frame] [--ref-image ...]');
 
   const model = flag(flags, 'model') ?? 'bytedance/seedance-2-5';
@@ -92,7 +92,7 @@ export async function musicCommand(sub: string | undefined, args: ParsedArgs): P
   if (sub !== 'gen') throw new Error('Usage: kie music gen "prompt" [options] (run "kie help music")');
   const { positional, flags } = args;
   const lyrics = readTextFlag(flags, 'lyrics');
-  const prompt = positional.join(' ') || flag(flags, 'prompt');
+  const prompt = promptFrom(positional, flags);
   const custom = lyrics !== undefined;
 
   const input: Record<string, unknown> = {

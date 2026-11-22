@@ -1,5 +1,5 @@
 import { API_BASE, apiKey, apiGet, apiPost, clearApiKey, CONFIG_PATH, isApiKeyAvailable, log, saveApiKey } from '../client.js';
-import { flag, isJsonMode, parseTimeoutSeconds, readJsonFlag, type ParsedArgs } from '../cli.js';
+import { flag, isJsonMode, parseTimeoutSeconds, promptFrom, readJsonFlag, type ParsedArgs } from '../cli.js';
 import { createTask, defaultOutPath, extractFiles, finishTask, taskStatus, uploadFile } from '../task.js';
 
 interface CatalogModel {
@@ -107,7 +107,9 @@ export async function statusCommand({ positional, flags }: ParsedArgs): Promise<
 export async function runCommand({ positional, flags }: ParsedArgs): Promise<void> {
   const model = positional[0];
   if (!model) throw new Error('Usage: kie run <model> --input \'{"prompt":"..."}\' [--wait] [--out path]');
-  const input = { ...readJsonFlag(flags, 'input'), ...(flag(flags, 'prompt') ? { prompt: flag(flags, 'prompt') } : {}) };
+  const input = { ...readJsonFlag(flags, 'input') };
+  const prompt = promptFrom([], flags);
+  if (prompt) input.prompt = prompt;
   const taskId = await createTask(model, input, flag(flags, 'callback'));
   if (hasNoWait(flags)) {
     console.log(taskId);

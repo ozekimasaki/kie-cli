@@ -61,6 +61,15 @@ export function readTextFlag(flags: Record<string, string | boolean>, name: stri
   return raw.startsWith('@') ? fs.readFileSync(raw.slice(1), 'utf8') : raw;
 }
 
+export function expandAtFile(text: string): string {
+  return text.startsWith('@') ? fs.readFileSync(text.slice(1), 'utf8') : text;
+}
+
+export function promptFrom(positional: string[], flags: Record<string, string | boolean>): string | undefined {
+  const raw = positional.join(' ') || flag(flags, 'prompt');
+  return raw ? expandAtFile(raw) : undefined;
+}
+
 export function isJsonMode(flags: Record<string, string | boolean>): boolean {
   return flags.json === true || flags.json === 'true';
 }
@@ -93,6 +102,7 @@ Environment:
   KIE_CHAT_MODEL             Default model for "kie chat"
 
 Key resolution order: --api-key > KIE_API_KEY > saved config.
+Prompts (positional, --prompt, --system, --lyrics, --input) accept @path to read a file, e.g. kie image gen @prompt.md.
 
 Run "kie help <command>" for command options.`,
   config: `kie config set-key [key]     Save key (interactive hidden prompt without argument)
@@ -104,7 +114,7 @@ Stored in ~/.kie/config.json with mode 0600 (override location with KIE_CONFIG).
 kie image ref "prompt" --ref <file|url> ...   Reference-based generation (default model nano-banana-2-1, up to 10 images)
 kie image edit "prompt" --image <file|url> ... [--model google/nano-banana-edit] [same output options]   Edit with up to 10 input images
 
-Local files are uploaded automatically first (kie upload). Without --out, result URLs are printed.`,
+Local files are uploaded automatically first (kie upload). Without --out, result URLs are printed. The prompt can be a file: kie image gen @prompt.md`,
   video: `kie video gen "prompt" [--model bytedance/seedance-2-5] [--image first-frame] [--last-frame f] [--ref-image url]... [--ref-video url]... [--ref-audio url]... [--aspect 16:9] [--resolution 1080p] [--duration 5] [--audio|--no-audio] [--format mp4] [--out path] [--auto-out] [--timeout seconds] [--input JSON] [--callback URL]
 
 Default wait timeout is 30 minutes; video tasks can take several.`,
@@ -116,7 +126,7 @@ Result tracks are printed as audio/cover URLs; --out saves the first track, mult
 kie chat --model <id>            Interactive REPL (/exit, /reset)
 kie chat models [--protocol openai|anthropic]
 
-Uses the OpenAI-compatible endpoint (KIE_API_BASE)/openai/v1/chat/completions. Streaming is on by default.`,
+Uses the OpenAI-compatible endpoint (KIE_API_BASE)/openai/v1/chat/completions. Streaming is on by default. The message and --system accept @file.`,
   models: `kie models [--task "Text to Image"] [--provider Google] [--q veo] [--json]
 
 With KIE_API_KEY set, queries GET /api/v1/models; otherwise falls back to the public playground catalog.`,

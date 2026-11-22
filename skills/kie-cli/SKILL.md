@@ -41,7 +41,7 @@ If no key is configured, ask the user to run `kie config set-key` themselves (in
 | Any model | `kie run <model-id> --input '{"prompt":"..."}'` |
 | Resume task | `kie status <taskId> --wait --out file` |
 
-Always pass `--out <path>` (or `--auto-out`) when the user wants a saved file — result URLs expire in 14 days. Local file paths given to `--image/--ref/--lyrics` are uploaded automatically (upload links expire in 24 h; the CLI handles this per run).
+Always pass `--out <path>` (or `--auto-out`) when the user wants a saved file — result URLs expire in 14 days. Local file paths given to `--image/--ref/--lyrics` are uploaded automatically (upload links expire in 24 h; the CLI handles this per run). Prompts read from a file with the `@` prefix: `kie image gen @prompt.md`, `kie chat --model X @question.txt`, `--system @persona.md`, `--input @params.json` (markdown/text content is passed verbatim).
 
 ## Defaults & overrides
 

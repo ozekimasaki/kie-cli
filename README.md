@@ -59,6 +59,7 @@ kie upload ./local.png                           # local file -> hosted URL (aut
 
 ## Notes
 
+- Prompts can come from a file: prefix with `@` (e.g. `kie image gen @prompt.md`, `kie chat --model X @question.txt`, `--system @persona.md`, `--input @params.json`). The file content is used verbatim (markdown included).
 - Local files passed to `--image/--ref/--lyrics` are uploaded via the KIE File Upload API first (uploaded files expire in 24 h).
 - Generation is async: the CLI polls `recordInfo` until `success`/`fail` (defaults: 10 min image, 30 min video/music; override with `--timeout <seconds>`). Without `--out`, result URLs are printed instead of downloading.
 - Chat uses the OpenAI-compatible endpoint `https://api.kie.ai/openai/v1/chat/completions`; list models with `kie chat models [--protocol anthropic]`.

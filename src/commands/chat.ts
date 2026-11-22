@@ -1,6 +1,6 @@
 import readline from 'node:readline/promises';
 import { API_BASE, apiKey, apiGet } from '../client.js';
-import { flag, flagList, hasFlag, isJsonMode, type ParsedArgs } from '../cli.js';
+import { flag, flagList, hasFlag, isJsonMode, expandAtFile, readTextFlag, type ParsedArgs } from '../cli.js';
 
 interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -31,14 +31,14 @@ export async function chatCommand(sub: string | undefined, { positional, flags, 
   }
 
   const messages: ChatMessage[] = [];
-  const system = flag(flags, 'system');
+  const system = readTextFlag(flags, 'system');
   if (system) messages.push({ role: 'system', content: system });
 
   const firstMessage = sub === undefined ? positional.join(' ') : `${sub} ${positional.join(' ')}`.trim();
   const images = flagList(repeats, flags, 'image');
 
   if (firstMessage) {
-    messages.push({ role: 'user', content: chatContent(firstMessage, images) });
+    messages.push({ role: 'user', content: chatContent(expandAtFile(firstMessage), images) });
     await completeOnce(model, messages, flags);
     return;
   }
