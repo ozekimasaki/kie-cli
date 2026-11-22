@@ -1,0 +1,52 @@
+{
+  "name": "@ozekimasaki/kie-cli",
+  "version": "0.1.0",
+  "description": "CLI for kie.ai: model catalog, credits, image/video/music generation, LLM chat",
+  "keywords": [
+    "kie",
+    "kie.ai",
+    "cli",
+    "ai",
+    "image-generation",
+    "video-generation",
+    "music-generation",
+    "suno",
+    "veo",
+    "nano-banana",
+    "llm"
+  ],
+  "license": "MIT",
+  "author": "Masaki Ozeki",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ozekimasaki/kie-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ozekimasaki/kie-cli/issues"
+  },
+  "homepage": "https://github.com/ozekimasaki/kie-cli#readme",
+  "type": "module",
+  "bin": {
+    "kie": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.17",
+    "bun": ">=1.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "kie": "bun src/index.ts",
+    "prepare": "tsc",
+    "prepublishOnly": "npm run build",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
