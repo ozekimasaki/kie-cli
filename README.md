@@ -68,8 +68,10 @@ kie upload ./local.png                           # local file -> hosted URL (aut
 
 ## Agent skill
 
-[`skills/kie-cli/SKILL.md`](skills/kie-cli/SKILL.md) teaches coding agents (Qoder, Claude Code, etc.) to drive this CLI. Install it with:
+[`skills/kie-cli/SKILL.md`](skills/kie-cli/SKILL.md) follows the [Agent Skills spec](https://agentskills.io/specification) (`skills/<name>/SKILL.md`), so it installs with the open tooling:
 
 ```bash
-cp -r skills/kie-cli ~/.qoder/skills/    # or your agent's skills directory
+npx skills add ozekimasaki/kie-cli                 # skills.sh CLI (Claude Code, Cursor, Codex, ... )
+gh skill install ozekimasaki/kie-cli kie-cli       # GitHub CLI (Copilot, Qoder, ...); --scope user to install globally
+cp -r skills/kie-cli ~/.qoder/skills/              # Qoder, manually
 ```

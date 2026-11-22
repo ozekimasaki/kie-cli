@@ -1,6 +1,12 @@
 ---
 name: kie-cli
 description: Generate and edit images, videos, and music, and chat with LLMs through kie.ai using the kie CLI (@maigo999/kie-cli). Use when the user asks to 画像生成/動画生成/音楽生成/Suno/Veo/Nano Banana/Seedance/画像編集/リファレンスから生成/クレジット確認/モデル一覧 or to run, call, list or debug kie commands; failed tasks can be resumed with kie status.
+license: MIT
+compatibility: Requires the kie CLI (npm/bun install -g @maigo999/kie-cli, or a checkout of github.com/ozekimasaki/kie-cli with bun or Node 18+) and network access to api.kie.ai.
+metadata:
+  author: Masaki Ozeki
+  homepage: https://github.com/ozekimasaki/kie-cli
+  version: "0.2.0"
 ---
 
 # kie-cli
