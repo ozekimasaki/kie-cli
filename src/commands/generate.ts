@@ -1,4 +1,5 @@
 import { createTask, defaultOutPath, finishTask, resolveInput } from '../task.js';
+import { checkInput } from '../schema.js';
 import { flag, flagList, hasFlag, parseTimeoutSeconds, promptFrom, readJsonFlag, readTextFlag, type ParsedArgs } from '../cli.js';
 
 export async function imageCommand(sub: string | undefined, args: ParsedArgs): Promise<void> {
@@ -50,6 +51,7 @@ async function imageEdit({ positional, flags, repeats }: ParsedArgs): Promise<vo
 }
 
 async function submit(model: string, input: Record<string, unknown>, flags: Record<string, string | boolean>, ext: string): Promise<void> {
+  await checkInput(model, input, flags.strict === true);
   const out = flag(flags, 'out') ?? (flags['auto-out'] ? defaultOutPath('image', String(input.output_format ?? ext)) : undefined);
   const taskId = await createTask(model, input, flag(flags, 'callback'));
   await finishTask(taskId, { timeoutMs: parseTimeoutSeconds(flag(flags, 'timeout'), 10 * 60_000), outPath: out });
@@ -84,6 +86,7 @@ export async function videoCommand(sub: string | undefined, args: ParsedArgs): P
   if (hasFlag(flags, 'no-audio')) input.generate_audio = false;
 
   const out = flag(flags, 'out') ?? (flags['auto-out'] ? defaultOutPath('video', String(input.output_format ?? 'mp4')) : undefined);
+  await checkInput(model, input, flags.strict === true);
   const taskId = await createTask(model, input, flag(flags, 'callback'));
   await finishTask(taskId, { timeoutMs: parseTimeoutSeconds(flag(flags, 'timeout'), 30 * 60_000), outPath: out });
 }
@@ -115,6 +118,7 @@ export async function musicCommand(sub: string | undefined, args: ParsedArgs): P
   putIf(input, 'vocal_gender', flag(flags, 'vocal'));
 
   const out = flag(flags, 'out') ?? (flags['auto-out'] ? defaultOutPath('audio', 'mp3') : undefined);
+  await checkInput('ai-music-api/generate', input, flags.strict === true, true);
   const taskId = await createTask('ai-music-api/generate', input, flag(flags, 'callback'));
   await finishTask(taskId, { timeoutMs: parseTimeoutSeconds(flag(flags, 'timeout'), 30 * 60_000), outPath: out });
 }

@@ -1,6 +1,7 @@
 import { API_BASE, apiKey, apiGet, apiPost, clearApiKey, CONFIG_PATH, isApiKeyAvailable, log, saveApiKey } from '../client.js';
 import { flag, isJsonMode, parseTimeoutSeconds, promptFrom, readJsonFlag, type ParsedArgs } from '../cli.js';
 import { createTask, defaultOutPath, extractFiles, finishTask, taskStatus, uploadFile } from '../task.js';
+import { checkInput, formatSchema, getModelSchema } from '../schema.js';
 
 interface CatalogModel {
   model?: string;
@@ -104,12 +105,24 @@ export async function statusCommand({ positional, flags }: ParsedArgs): Promise<
   if (status.creditsConsumed != null) console.log(`credits consumed: ${status.creditsConsumed}`);
 }
 
+export async function schemaCommand({ positional, flags }: ParsedArgs): Promise<void> {
+  const model = positional[0];
+  if (!model) throw new Error('Usage: kie schema <model> [--json]   e.g. kie schema google/nano-banana');
+  const schema = await getModelSchema(model);
+  if (!schema) {
+    throw new Error(`No documented input schema found for "${model}" on docs.kie.ai. Use an exact provider/model id from "kie models" (docs live at https://docs.kie.ai/market/<provider>/<model>.md).`);
+  }
+  if (isJsonMode(flags)) console.log(JSON.stringify(schema, null, 2));
+  else console.log(formatSchema(schema));
+}
+
 export async function runCommand({ positional, flags }: ParsedArgs): Promise<void> {
   const model = positional[0];
   if (!model) throw new Error('Usage: kie run <model> --input \'{"prompt":"..."}\' [--wait] [--out path]');
   const input = { ...readJsonFlag(flags, 'input') };
   const prompt = promptFrom([], flags);
   if (prompt) input.prompt = prompt;
+  await checkInput(model, input, flags.strict === true, true);
   const taskId = await createTask(model, input, flag(flags, 'callback'));
   if (hasNoWait(flags)) {
     console.log(taskId);

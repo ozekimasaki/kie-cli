@@ -50,6 +50,7 @@ Key resolution order: `--api-key` > `KIE_API_KEY` > saved config.
 | Requirement | Command |
 | --- | --- |
 | Model list | `kie models [--task image] [--provider Google] [--q veo] [--json]` |
+| Model parameters | `kie schema google/nano-banana` (enums, defaults, required — parsed live from docs.kie.ai) |
 | Credit balance | `kie balance` |
 | Image generation | `kie image gen "a white ceramic mug, product photo" --aspect 1:1 --auto-out` |
 | Image editing | `kie image edit "make it sunset" --image photo.jpg --out edited.png` |
@@ -83,6 +84,7 @@ kie run <model> --input @params.json            # raw JSON parameters from a fil
 ## Notes
 
 - Generation is async: the CLI polls `recordInfo` until `success`/`fail` (defaults: 10 min image, 30 min video/music; override with `--timeout <seconds>`). Without `--out`, result URLs are printed instead of downloading.
+- Inputs are validated against each model's published schema: unknown keys (kie ignores them silently!), out-of-enum values, deprecated fields and missing required parameters produce a stderr warning — pass `--strict` to abort instead. `kie schema <model>` prints the full field list.
 - Chat uses the OpenAI-compatible endpoint `https://api.kie.ai/openai/v1/chat/completions`; list models with `kie chat models [--protocol anthropic]`.
 - Default models: `google/nano-banana` (gen), `nano-banana-2-1` (ref), `google/nano-banana-edit` (edit), `bytedance/seedance-2-5` (video), `ai-music-api/generate` + Suno `V6` (music). Override with `--model` / `--input` JSON.
 - Generated files are kept by KIE for 14 days; use `--auto-out` or `--out` to save locally.

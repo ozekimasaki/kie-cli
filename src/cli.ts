@@ -85,6 +85,7 @@ Usage: kie <command> [options]
 
 Commands:
   models                     List available models (--task --provider --q --json)
+  schema <model>             Show a model's documented input parameters (--json)
   balance                    Show remaining credits (--json)
   image gen|ref|edit         Generate / reference-based generate / edit images
   video gen                  Generate videos
@@ -103,6 +104,7 @@ Environment:
 
 Key resolution order: --api-key > KIE_API_KEY > saved config.
 Prompts (positional, --prompt, --system, --lyrics, --input) accept @path to read a file, e.g. kie image gen @prompt.md.
+Inputs are checked against the model's docs (kie schema <model>); warnings are non-fatal unless --strict.
 
 Run "kie help <command>" for command options.`,
   config: `kie config set-key [key]     Save key (interactive hidden prompt without argument)
@@ -130,6 +132,12 @@ Uses the OpenAI-compatible endpoint (KIE_API_BASE)/openai/v1/chat/completions. S
   models: `kie models [--task "Text to Image"] [--provider Google] [--q veo] [--json]
 
 With KIE_API_KEY set, queries GET /api/v1/models; otherwise falls back to the public playground catalog.`,
+  schema: `kie schema <provider/model> [--json]
+
+Fetches the model's OpenAPI page from docs.kie.ai (market/<provider>/<model>.md, with fuzzy
+matching via llms.txt for kie run) and lists input parameters: type, enum values, defaults,
+required, deprecated, max length. Generation commands check --input against this schema and
+warn on unknown keys or out-of-enum values (pass --strict to fail instead).`,
 };
 
 export function HELP(topic = ''): string {

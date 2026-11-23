@@ -6,7 +6,7 @@ compatibility: Requires the kie CLI (npm/bun install -g @maigo999/kie-cli, or a 
 metadata:
   author: Masaki Ozeki
   homepage: https://github.com/ozekimasaki/kie-cli
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # kie-cli
@@ -45,6 +45,7 @@ If no key is configured, ask the user to run `kie config set-key` themselves (in
 | Chat once | `kie chat --model gpt-5.2 "question" --no-stream` |
 | Chat models | `kie chat models` |
 | Any model | `kie run <model-id> --input '{"prompt":"..."}'` |
+| Model parameters | `kie schema <model>` (enums, defaults, required, deprecated) |
 | Resume task | `kie status <taskId> --wait --out file` |
 
 Always pass `--out <path>` (or `--auto-out`) when the user wants a saved file — result URLs expire in 14 days. Local file paths given to `--image/--ref/--lyrics` are uploaded automatically (upload links expire in 24 h; the CLI handles this per run). Prompts read from a file with the `@` prefix: `kie image gen @prompt.md`, `kie chat --model X @question.txt`, `--system @persona.md`, `--input @params.json` (markdown/text content is passed verbatim).
@@ -55,11 +56,12 @@ Always pass `--out <path>` (or `--auto-out`) when the user wants a saved file �
 - Video also accepts `--last-frame`, `--ref-image/--ref-video/--ref-audio`, `--audio|--no-audio`, `--resolution`.
 - Timeouts: 10 min image, 30 min video/music; override with `--timeout <seconds>`. On timeout the task keeps running server-side — re-read the taskId from stderr and finish with `kie status <taskId> --wait`.
 - `--json` on models/balance/status/chat for machine-readable output.
-- No pixel `size` parameter exists for nano-banana models: `--aspect` must be one of the enum `1:1|9:16|16:9|3:4|4:3`, and unknown `--input` keys are silently ignored by the API (output falls back to 1:1). For custom ratios (e.g. business card 91:55), generate at the nearest enum value and crop locally.
+- kie silently ignores unknown `--input` keys (e.g. a pixel `size` does not exist on nano-banana models — output falls back to the aspect default). The CLI now checks every submit against the model's docs schema and prints `[kie] warning: schema check ...` on stderr; pass `--strict` to fail instead of warn. `kie schema <model>` prints the authoritative field list (run `kie schema google/nano-banana` etc. instead of guessing enums).
+- Per-model parameter notes and pitfalls: [references/models.md](references/models.md).
 
 ## Workflow hints
 
-1. For an unfamiliar model, `kie models --q <name>` then `kie run <id> --input ...`; parameter docs: https://docs.kie.ai.
+1. For an unfamiliar model, `kie models --q <name>` to find the id, `kie schema <id>` for its exact input parameters (falls back to fuzzy docs matching for `kie run` ids), then `kie run <id> --input ...`. Raw docs: https://docs.kie.ai/market/<provider>/<model>.md.
 2. Check `kie balance` before expensive video/music batches (a 402 error means insufficient credits).
 3. Errors come back as `kie: <message>` with exit 1 (usage errors exit 2). Common codes: 401 bad key, 402 no credits, 429 rate limit (≤20 submits/10 s) — back off and retry.
 4. Report saved file paths back to the user; with multiple results (music tracks, image sets) files get `-1/-2` suffixes.

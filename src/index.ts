@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createRequire } from 'node:module';
 import { parseArgs, HELP } from './cli.js';
-import { balanceCommand, modelsCommand, runCommand, statusCommand, uploadCommand } from './commands/info.js';
+import { balanceCommand, modelsCommand, runCommand, schemaCommand, statusCommand, uploadCommand } from './commands/info.js';
 import { imageCommand, musicCommand, videoCommand } from './commands/generate.js';
 import { chatCommand } from './commands/chat.js';
 import { configCommand } from './commands/config.js';
@@ -31,6 +31,8 @@ async function main(): Promise<void> {
   switch (command) {
     case 'models':
       return modelsCommand({ positional: rest, flags, repeats });
+    case 'schema':
+      return schemaCommand({ positional: rest, flags, repeats });
     case 'balance':
     case 'credits':
       return balanceCommand({ positional: rest, flags, repeats });
